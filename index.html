@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>매매일지 - 주식전용</title>
+
+  <!--
+    주식 매매일지 메인 HTML
+    - 구조/폼/테이블/모달 마크업만 포함
+    - 스타일은 tlog-stocks.css
+    - 동작 로직은 tlog-stocks.js에서 처리
+  -->
+  <link rel="stylesheet" href="stocks.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <div class="brand">주식 Tlog</div>
+      <div class="nav">
+        <a href="file:///C:/Users/john/Desktop/tlogweb/stocks/stocks.html" class="btn btn-linklike" aria-current="page">주식 매매일지</a>
+        <a href="file:///C:/Users/john/Desktop/tlogweb/crypto/crypto.html" class="btn btn-linklike">코인 매매일지</a>
+      </div>
+    </div>
+    <div class="subtitle">한 매매씩 입력하면 아래 표에 자동 저장됩니다 (브라우저 로컬 저장).</div>
+
+    <!-- 원칙 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">매매 원칙</div>
+        <span class="badge">브라우저 로컬 저장</span>
+      </div>
+      <div class="field">
+        <label for="principles">매매 전 항상 확인할 원칙을 적어두세요.</label>
+        <textarea id="principles" rows="4"></textarea>
+      </div>
+      <br>
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
+        <span id="principles-status" class="caption">아직 저장된 매매 원칙이 없습니다.</span>
+        <div style="display:flex; gap:8px;">
+          <button type="button" class="btn btn-secondary" id="principles-reset-btn">내용 비우기</button>
+          <button type="button" class="btn btn-primary" id="principles-save-btn">원칙 저장</button> 
+        </div>
+      </div>
+    </div>
+
+    <!-- 개요 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">개요</div>
+        <span class="badge">차트 자동 갱신</span>
+      </div>
+
+      <div class="inline-row">
+        <div class="field grow">
+          <label for="startingCash">예수금 (주식)</label>
+          <input type="number" id="startingCash" step="1" placeholder="예: 10000000"/>
+        </div>
+        <div class="field" style="align-self:end;">
+          <label style="visibility:hidden">save</label>
+          <button type="button" class="btn btn-primary" id="save-cash-btn">저장</button>
+        </div>
+      </div>
+
+      <div class="range-toolbar" id="rangeToolbar">
+        <button class="btn btn-secondary active" data-range="ALL">전체</button>
+        <button class="btn btn-secondary" data-range="WEEK">일주일</button>
+        <button class="btn btn-secondary" data-range="1M">1개월</button>
+        <button class="btn btn-secondary" data-range="3M">3개월</button>
+        <button class="btn btn-secondary" data-range="6M">6개월</button>
+        <button class="btn btn-secondary" data-range="1Y">1년</button>
+      </div>
+
+      <!-- 오늘 손익 / 손익률 통계 -->
+      <div class="stats" style="margin-top:10px;">
+        <div class="stat">
+          <div class="label">오늘 손익 / 수익률</div>
+          <div class="value" id="stat-today-pnl">-</div>
+          <div class="caption" id="stat-today-ret">
+            예수금 기준 - / 전일 대비 -
+          </div>
+        </div>
+      </div>
+
+      <!-- 기존 누적 통계 -->
+      <div class="stats" style="margin-top:10px;">
+        <div class="stat"><div class="label">평가금</div><div class="value" id="stat-equity">-</div></div>
+        <div class="stat"><div class="label">누적 손익</div><div class="value" id="stat-totalpnl">-</div></div>
+        <div class="stat"><div class="label">누적 손익률 (%)</div><div class="value" id="stat-cumret">-</div></div>
+      </div>
+
+
+      <div style="margin-top:14px; position:relative;">
+        <canvas id="equityChart" width="1100" height="240" aria-label="누적 수익 그래프"></canvas>
+        <div id="chartTooltip" style="position:absolute; pointer-events:none; display:none; background:rgba(2,6,23,.9); border:1px solid #1f2937; padding:8px 10px; border-radius:8px; font-size:12px; color:#e5e7eb; box-shadow:0 8px 24px rgba(0,0,0,.5);"></div>
+      </div>
+    </div>
+
+    <!-- 입력 카드 (주식: 포지션 항목 없음) -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">한 매매 기록 입력</div>
+        <span class="badge">손익 / 손익률 직접 입력</span>
+      </div>
+
+      <form id="trade-form">
+        <div class="field col-3"><label for="date">날짜</label><input type="date" id="date" required/></div>
+        <div class="field col-3"><label for="symbol">종목</label><input id="symbol" placeholder="예: 005930, AAPL 등" required/></div>
+        <div class="field col-3"><label for="avgEntry">평균 진입가(필수)</label><input type="number" step="0.000001" id="avgEntry" required/></div>
+
+        <div class="field col-3"><label for="entry1">1차 진입가(선택)</label><input type="number" step="0.000001" id="entry1"/></div>
+        <div class="field col-3"><label for="entry2">2차 진입가(선택)</label><input type="number" step="0.000001" id="entry2"/></div>
+        <div class="field col-3"><label for="entry3">3차 진입가(선택)</label><input type="number" step="0.000001" id="entry3"/></div>
+
+        <div class="field col-3"><label for="quantity">수량</label><input type="number" step="0.0001" id="quantity" required/></div>
+        <div class="field col-3"><label for="pnl">손익</label><input type="number" id="pnl" step="0.01"/></div>
+        <div class="field col-3"><label for="pnlPercent">손익률 %</label><input type="number" id="pnlPercent" step="0.01"/></div>
+
+        <div class="field col-12"><label for="reason">진입 근거</label><textarea id="reason"></textarea></div>
+        <div class="field col-12"><label for="exitReason">실제 청산 이유</label><textarea id="exitReason"></textarea></div>
+        <div class="field col-12"><label for="lesson">피드백</label><textarea id="lesson"></textarea></div>
+
+        <div class="col-12" style="display:flex; justify-content:flex-end; gap:8px;">
+          <button type="button" class="btn btn-secondary" id="reset-form-btn">입력 내용 초기화</button>
+          <button type="submit" class="btn btn-primary">매매 기록 추가</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- 표 카드 -->
+    <div class="table-wrapper">
+      <div class="table-header">
+        <div>
+          <div class="table-header-title">매매 기록 리스트</div>
+          <div class="table-header-sub">행을 클릭하면 상세 보기가 열립니다.</div>
+        </div>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <input type="file" id="csv-file" accept=".csv" style="display:none;">
+          <button id="export-csv-btn" class="btn btn-secondary btn-sm">CSV 내보내기</button>
+          <button id="import-csv-btn" class="btn btn-secondary btn-sm">CSV 가져오기</button>
+          <button id="clear-all-btn" class="btn btn-danger btn-sm">전체 기록 삭제</button>
+        </div>
+      </div>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>날짜</th><th>종목</th><th>평균 진입가</th>
+              <th>수량</th><th>손익</th><th>손익률%</th>
+            </tr>
+          </thead>
+          <tbody id="trade-table-body"></tbody>
+        </table>
+      </div>
+      <div id="empty-state" class="empty-state">아직 기록된 매매가 없습니다. 위 폼에서 첫 매매를 기록해 보세요.</div>
+    </div>
+  </div>
+
+  <!-- 상세 모달 -->
+  <div id="modal-backdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title" id="modal-title">매매 상세</div>
+        <button class="btn btn-secondary btn-sm" id="modal-close">닫기</button>
+      </div>
+      <div class="modal-body readonly" id="modal-body">
+        <div class="field col-3"><label>날짜</label><input type="date" id="m_date" disabled/></div>
+        <div class="field col-3"><label>종목</label><input id="m_symbol" disabled/></div>
+        <div class="field col-3"><label>평균 진입가</label><input type="number" step="0.000001" id="m_avgEntry" disabled/></div>
+
+        <div class="field col-3"><label>1차 진입가</label><input type="number" step="0.000001" id="m_entry1" disabled/></div>
+        <div class="field col-3"><label>2차 진입가</label><input type="number" step="0.000001" id="m_entry2" disabled/></div>
+        <div class="field col-3"><label>3차 진입가</label><input type="number" step="0.000001" id="m_entry3" disabled/></div>
+
+        <div class="field col-3"><label>수량</label><input type="number" step="0.0001" id="m_qty" disabled/></div>
+        <div class="field col-3"><label>손익</label><input type="number" step="0.01" id="m_pnl" disabled/></div>
+        <div class="field col-3"><label>손익률 %</label><input type="number" step="0.01" id="m_pnlp" disabled/></div>
+
+        <div class="field col-12"><label>진입 근거</label><textarea id="m_reason" rows="3" disabled></textarea></div>
+        <div class="field col-12"><label>청산 이유</label><textarea id="m_exit" rows="3" disabled></textarea></div>
+        <div class="field col-12"><label>교훈</label><textarea id="m_lesson" rows="3" disabled></textarea></div>
+        <div class="caption col-12">* 모달에서 수정/저장하면 통계와 그래프가 자동 갱신됩니다.</div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-danger btn-sm" id="modal-delete">삭제</button>
+        <button class="btn btn-secondary btn-sm" id="modal-cancel" style="display:none;">취소</button>
+        <button class="btn btn-primary btn-sm" id="modal-edit">수정</button>
+        <button class="btn btn-primary btn-sm" id="modal-save" style="display:none;">저장</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 주식 매매일지 동작 스크립트 -->
+  <script src="stocks.js"></script>
+</body>
+</html>

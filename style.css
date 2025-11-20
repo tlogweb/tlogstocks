@@ -1,0 +1,367 @@
+/*
+  tlog-stocks.css
+  - 주식 매매일지 전용 스타일
+  - 코인 버전과 거의 동일한 다크 테마이지만, 모달/버튼 일부 색상만 다름
+*/
+
+* {
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+}
+body {
+  margin: 0;
+  padding: 0;
+  background: #121212;
+  color: #e5e7eb;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* 기본 레이아웃 */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 16px 60px;
+}
+.topbar {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:16px;
+}
+.brand {
+  font-size:24px;
+  font-weight:800;
+  letter-spacing:.2px;
+}
+.nav {
+  display:flex;
+  gap:8px;
+}
+
+/* 버튼 */
+.btn {
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 13px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.btn-sm {
+  padding: 6px 10px;
+  font-size: 12px;
+}
+.btn-primary {
+  background: linear-gradient(135deg, #2563eb, #22c55e);
+  color: white;
+  border: none;
+}
+.btn-secondary {
+  background: #151515;
+  color: #e5e7eb;
+  border: 1px solid #4b5563;
+}
+.btn-danger {
+  background: #7f1d1d;
+  color: #fee2e2;
+  border: 1px solid #b91c1c;
+}
+.btn-linklike {
+  background: linear-gradient(135deg, #2563eb, #22c55e);
+  color:white;
+  border:none;
+  font-size:16px;
+}
+
+/* 카드 / 텍스트 */
+.subtitle {
+  color: #9ca3af;
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+.card {
+  background: #151515;
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid #8a8a8a;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.45);
+  margin-bottom: 20px;
+}
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.card-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+.badge {
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(59,130,246,0.15);
+  color: #93c5fd;
+  border: 1px solid rgba(59,130,246,0.4);
+}
+.caption {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+/* 폼 그리드(9열) */
+form {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 12px 16px;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+label {
+  font-size: 12px;
+  color: #9ca3af;
+}
+input,
+select,
+textarea {
+  border-radius: 10px;
+  border: 1px solid #8a8a8a;
+  padding: 7px 8px;
+  background: #151515;
+  color: #e5e7eb;
+  font-size: 13px;
+  width: 100%;
+}
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 1px rgba(59,130,246,0.3);
+}
+textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+/* 그리드 단축 */
+.col-3 { grid-column: span 3; }
+.col-12{ grid-column:1 / -1; }
+
+/* 인라인 행 (예수금 입력 등) */
+.inline-row {
+  display:flex;
+  gap:8px;
+  align-items:stretch;
+  max-width:520px;
+}
+.inline-row .grow {
+  flex:1 1 auto;
+}
+
+/* 테이블 박스 */
+.table-wrapper {
+  border-radius: 16px;
+  border: 1px solid #8a8a8a;
+  background: #151515;
+  overflow: hidden;
+  box-shadow: 0 16px 30px rgba(0,0,0,0.5);
+}
+.table-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid #858585;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.table-header-title {
+  font-size: 14px;
+  font-weight: 600;
+}
+.table-header-sub {
+  font-size: 11px;
+  color: #6b7280;
+}
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  min-width: 860px;
+}
+thead {
+  background: #151515;
+}
+thead th {
+  position: sticky;
+  top: 0;
+  background: #151515;
+  z-index: 1;
+}
+th,
+td {
+  padding: 10px 8px;
+  border-bottom: 1px solid #8a8a8a;
+  text-align: left;
+  white-space: nowrap;
+  vertical-align: top;
+}
+th {
+  font-weight: 500;
+  color: #9ca3af;
+  font-size: 11px;
+}
+tbody tr:nth-child(even) {
+  background: rgba(15,23,42,0.7);
+}
+tbody tr:hover {
+  background: rgba(30,64,175,0.35);
+  cursor: pointer;
+}
+
+/* 손익 색상 */
+.pnl-positive {
+  color: #4ade80;
+  font-variant-numeric: tabular-nums;
+}
+.pnl-negative {
+  color: #f87171;
+  font-variant-numeric: tabular-nums;
+}
+.pnl-zero {
+  color: #e5e7eb;
+  font-variant-numeric: tabular-nums;
+}
+.text-mono {
+  font-variant-numeric: tabular-nums;
+}
+.empty-state {
+  padding: 18px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* 통계 카드 */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+}
+.stat {
+  background: #151515;
+  border: 1px solid #8a8a8a;
+  border-radius: 12px;
+  padding: 12px;
+}
+.stat .label {
+  font-size: 11px;
+  color: #9ca3af;
+  margin-bottom: 6px;
+}
+.stat .value {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+/* 차트 */
+canvas {
+  width:100%;
+  height:240px;
+}
+
+/* 기간 선택 툴바 */
+.range-toolbar {
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  align-items:center;
+  margin-top:12px;
+}
+.range-toolbar .btn {
+  padding:6px 12px;
+  font-size:12px;
+}
+.range-toolbar .btn.active {
+  outline: 2px solid rgba(59,130,246,.6);
+}
+
+/* 날짜 버튼 */
+input[type="date"] {
+  color-scheme: dark;
+  padding-right:34px;
+}
+input[type="date"]::-webkit-calendar-picker-indicator{
+  opacity:1;
+  cursor:pointer;
+  background:no-repeat center/16px 16px url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="%23e5e7eb"><path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 15H5V10h14v9zm0-11H5V6h14v2z"/></svg>');
+  padding:6px;
+  border-radius:8px;
+}
+input[type="date"]::-webkit-calendar-picker-indicator:hover{
+  background-color:rgba(229,231,235,.08);
+}
+
+/* 모달 */
+.modal-backdrop {
+  position:fixed !important;
+  inset:0;
+  background:#151515;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+}
+.modal {
+  width:min(860px,92vw);
+  max-height:90vh;
+  overflow:auto;
+  background:#020617;
+  border:1px solid #1f2937;
+  border-radius:16px;
+  box-shadow:0 30px 70px rgba(0,0,0,.55);
+}
+body.modal-open {
+  overflow:hidden;
+}
+.modal-header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:14px 18px;
+  border-bottom:1px solid #111827;
+}
+.modal-title {
+  font-weight:700;
+}
+.modal-body {
+  padding:16px 18px;
+  display:grid;
+  grid-template-columns:repeat(12, 1fr);
+  gap:12px 16px;
+}
+.modal-actions {
+  padding:12px 18px;
+  border-top:1px solid #111827;
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+}
+.readonly input,
+.readonly textarea,
+.readonly select {
+  background:#0b1222;
+  border-color:#2b3242;
+}
